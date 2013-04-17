@@ -33,9 +33,9 @@ class ReleaseParser {
         p.in.close()
 
         // add the tip of the active branches
-        ["rc","stable"].each { branch ->
+        ["origin/rc","origin/stable"].each { branch ->
             // pick up the version in the POM
-            p = "git show ${branch}:pom.xml".execute()
+            p = "git show $branch:pom.xml".execute()
             p.out.close()
             p.consumeProcessErrorStream(System.err)
             def pom = new XmlSlurper().parse(p.in)
