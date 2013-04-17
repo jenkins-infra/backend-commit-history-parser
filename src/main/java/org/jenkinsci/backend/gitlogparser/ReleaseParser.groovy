@@ -70,6 +70,6 @@ class ReleaseParser {
 
         def lst = new ReleaseParser().parse();
 
-        x.writeValue(System.out,lst)
+        x.writeValue(args.length>0 ? new File(args[0]) : System.out,lst)
     }
 }
