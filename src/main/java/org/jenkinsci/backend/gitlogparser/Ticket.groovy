@@ -1,10 +1,13 @@
 package org.jenkinsci.backend.gitlogparser
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 abstract class Ticket {
 
     /**
      * Relevant commit IDs for this change. This doesn't participate to the comparison
      */
+    @JsonProperty
     List<String> commits = [];
 
     public boolean equals(Object rhs) {
@@ -15,7 +18,6 @@ abstract class Ticket {
     int hashCode() {
         return toString().hashCode()
     }
-
 }
 
 

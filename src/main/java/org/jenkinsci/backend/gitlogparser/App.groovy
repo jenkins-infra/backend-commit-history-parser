@@ -10,9 +10,10 @@ import org.jenkinsci.jira.JIRA
  */
 @Grapes([
     @Grab("org.jenkins-ci:jira-api:1.2"),
-    @Grab("org.jenkins-ci:version-number:1.0")
+    @Grab("org.jenkins-ci:version-number:1.1")
 ])
 class App {
+    def ticketDetailLoader = new TicketDetailLoader()
 
     /**
      * Generates a changelog fragment into the specified file.
@@ -50,7 +51,7 @@ class App {
         }
     }
 
-    def jiraStatus(String code) {
+    static def jiraStatus(String code) {
         switch(code) {
         case "1":       return "open";
         case "3":       return "progress";
@@ -62,7 +63,7 @@ class App {
         }
     }
 
-    def jiraResolution(String code) {
+    static def jiraResolution(String code) {
         if (code==null) return "";
         switch(code) {
         case "1":   return "fixed";
@@ -76,7 +77,7 @@ class App {
         }
     }
 
-    def jiraType(String code) {
+    static def jiraType(String code) {
         if (code==null) return "";
         switch(code) {
         case "1":   return "bug";
@@ -101,15 +102,9 @@ class App {
      * Connect to JIRA and retrieve details for all the given tickets.
      */
     List<RemoteIssue> retrieveJiraTicketDetails(Collection tickets) {
-        
-        def jira = JIRA.connect(new URL("https://issues.jenkins-ci.org/"))
-        def props = new Properties()
-        props.load(new FileReader("${System.properties["user.home"]}/.jenkins-ci.org"))
-        def token = jira.login(props['userName'], props['password'])
-
         return tickets
             .findAll { it instanceof OSSTicket }
-            .collect { OSSTicket t -> jira.getIssue(token,t.displayName) }
+            .collect { OSSTicket t -> ticketDetailLoader.retrieve(t) }
     }
 
     // find tickets mentioned in the given string
@@ -132,7 +127,8 @@ class App {
         Map<Ticket,List<String/*sha1*/>> commits = [:];
         Set<Ticket> fixed = [];
 
-        generator { String sha1, String log ->
+        generator { String sha1, String log -> // for each commit given by a generator...
+
             // println "${sha1}:${log.substring(0,Math.min(log.length(),50))}"
 
             // look for commits related to a ticket, including those that aren't fixed

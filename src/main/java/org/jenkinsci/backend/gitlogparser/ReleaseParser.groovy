@@ -1,0 +1,75 @@
+package org.jenkinsci.backend.gitlogparser
+
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import hudson.util.VersionNumber
+
+/**
+ * Finds all the releases from Jenkins core git repository and generates {@code List<Release>}
+ * that represents that.
+ *
+ * @author Kohsuke Kawaguchi
+ */
+@Grapes([
+    @Grab("com.fasterxml.jackson.core:jackson-databind:2.1.1"),
+    @Grab("org.jenkins-ci:version-number:1.1")
+])
+class ReleaseParser {
+    List<Release> parse() {
+        def releases = []
+
+        def p = "git tag -l".execute()
+        p.out.close()
+        p.consumeProcessErrorStream(System.err)
+        p.in.eachLine { tag ->
+            tag = tag.trim()
+            if (tag ==~ /jenkins-(1(\.[0-9]+)*)/) {
+                def v = tag.substring("jenkins-".length())
+                def prev = dec(v)
+                releases << new Release(version:new VersionNumber(v), displayName: v, rc: false, ref: tag, revList: "jenkins-$v ^jenkins-$prev")
+            }
+        }
+        p.in.close()
+
+        // add the tip of the active branches
+        ["rc","stable"].each { branch ->
+            // pick up the version in the POM
+            p = "git show ${branch}:pom.xml".execute()
+            p.out.close()
+            p.consumeProcessErrorStream(System.err)
+            def pom = new XmlSlurper().parse(p.in)
+
+            String v = pom.version.text()
+            v = v.substring(0,v.length()-"-SNAPSHOT".length())
+            def prev = dec(v)
+            releases << new Release(version:new VersionNumber(v), displayName: "$v RC", rc:true, ref: branch, revList: "$branch ^jenkins-$prev")
+        }
+
+        App app = new App()
+        releases.each { Release r -> r.extractTickets(app) }
+
+        return releases.sort();
+    }
+
+    // decrement a version number
+    def dec(String ver) {
+        def a = ver.split("\\.") as List
+        a[-1] = (a.last() as Integer)-1
+        if (a[-1]==0)
+            a.pop()
+        return a.join(".")
+    }
+
+    public static void main(String[] args) {
+        def x = new ObjectMapper();
+        // requires explicit annotation since Groovy generates all kinds of getters&setters
+        // that confuses Jackson
+        x.disable(MapperFeature.AUTO_DETECT_GETTERS, MapperFeature.AUTO_DETECT_FIELDS)
+        x.enable(SerializationFeature.INDENT_OUTPUT)
+
+        def lst = new ReleaseParser().parse();
+
+        x.writeValue(System.out,lst)
+    }
+}
