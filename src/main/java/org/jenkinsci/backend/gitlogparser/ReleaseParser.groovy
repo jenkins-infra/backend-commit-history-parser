@@ -45,7 +45,8 @@ class ReleaseParser {
             if (numDigits(vn)==3 && numDigits(prev)==2) {
                 // first branch off of new LTS baseline. add the last LTS release to the mix as well
                 def lts = versions.keySet().findAll { it.compareTo(v)<0 && numDigits(it)==3 } as TreeSet
-                revList += " ^-jenkins-${lts.last()}"
+                if (!lts.isEmpty())
+                    revList += " ^-jenkins-${lts.last()}"
             }
             releases << new Release(version:v, displayName: vn, rc: false, ref: tag, revList: revList)
         }
