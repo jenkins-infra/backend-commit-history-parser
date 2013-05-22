@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import hudson.util.VersionNumber
 
 /**
- *
+ * Data structure that represents a Jenkins release,
+ * used for writing out the release.
  *
  * @author Kohsuke Kawaguchi
  */

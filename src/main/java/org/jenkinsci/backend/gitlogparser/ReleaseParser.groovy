@@ -16,19 +16,38 @@ import hudson.util.VersionNumber
     @Grab("org.jenkins-ci:version-number:1.1")
 ])
 class ReleaseParser {
+    def numDigits(v) {
+        return v.toString().split("\\.").length;
+    }
+
     List<Release> parse() {
         def releases = []
 
         def p = "git tag -l".execute()
         p.out.close()
         p.consumeProcessErrorStream(System.err)
+
+        // collect all the version numbers
+        def versions = [:] as Map<VersionNumber,String>
         p.in.eachLine { tag ->
             tag = tag.trim()
             if (tag ==~ /jenkins-(1(\.[0-9]+)*)/) {
-                def v = tag.substring("jenkins-".length())
-                def prev = dec(v)
-                releases << new Release(version:new VersionNumber(v), displayName: v, rc: false, ref: tag, revList: "jenkins-$v ^jenkins-$prev")
+                def v = new VersionNumber(tag.substring("jenkins-".length()))
+                versions[v] = tag
             }
+        }
+
+        versions.each { v,tag ->
+            def vn = v.toString()
+            def prev = dec(vn)
+            def revList = "$tag ^jenkins-$prev"
+
+            if (numDigits(vn)==3 && numDigits(prev)==2) {
+                // first branch off of new LTS baseline. add the last LTS release to the mix as well
+                def lts = versions.keySet().findAll { it.compareTo(v)<0 && numDigits(it)==3 } as TreeSet
+                revList += " ^-jenkins-${lts.last()}"
+            }
+            releases << new Release(version:v, displayName: vn, rc: false, ref: tag, revList: revList)
         }
         p.in.close()
 
