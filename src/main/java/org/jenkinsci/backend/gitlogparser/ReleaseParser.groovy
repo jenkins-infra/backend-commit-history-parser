@@ -11,10 +11,6 @@ import hudson.util.VersionNumber
  *
  * @author Kohsuke Kawaguchi
  */
-@Grapes([
-    @Grab("com.fasterxml.jackson.core:jackson-databind:2.1.1"),
-    @Grab("org.jenkins-ci:version-number:1.1")
-])
 class ReleaseParser {
     def numDigits(v) {
         return v.toString().split("\\.").length;

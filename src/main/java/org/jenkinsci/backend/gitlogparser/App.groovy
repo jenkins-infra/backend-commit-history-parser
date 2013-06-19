@@ -8,10 +8,6 @@ import org.jenkinsci.jira.JIRA
  * Look for changes that are marked as fixed on one side, but not on the other, list them up,
  * and create the "cherry pick cheat sheet" that contains commits for backporting those fixes.
  */
-@Grapes([
-    @Grab("org.jenkins-ci:jira-api:1.2"),
-    @Grab("org.jenkins-ci:version-number:1.1")
-])
 class App {
     def ticketDetailLoader = new TicketDetailLoader()
 

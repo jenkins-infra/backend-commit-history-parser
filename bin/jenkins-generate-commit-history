@@ -1,4 +1,4 @@
 #!/bin/bash
 # generate the changelog for releases
 base="$(readlink -f $(dirname "$0"))"
-exec groovy -cp "$base/../src/main/java" -e 'org.jenkinsci.backend.gitlogparser.ReleaseParser.main(args)' "$@"
+exec groovy -cp "$base/../src/main/java" -e 'org.jenkinsci.backend.gitlogparser.Boot.boot("ReleaseParser",args);' "$@"

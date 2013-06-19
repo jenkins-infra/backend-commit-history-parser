@@ -9,9 +9,6 @@ import org.jenkinsci.jira.JIRA
  *
  * @author Kohsuke Kawaguchi
  */
-@Grapes([
-    @Grab("org.jenkins-ci:jira-api:1.2"),
-])
 class TicketDetailLoader {
     private JiraSoapService jira;
     private String token;

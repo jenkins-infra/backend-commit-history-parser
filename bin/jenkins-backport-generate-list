@@ -10,4 +10,4 @@ if [ "$#" == 0 ]; then
   exit 1
 fi
 base="$(readlink -f $(dirname "$0"))"
-exec groovy -cp "$base/../src/main/java" -e 'org.jenkinsci.backend.gitlogparser.BackportCandidateListGenerator.main(args)' "$@"
+exec groovy -cp "$base/../src/main/java" -e 'org.jenkinsci.backend.gitlogparser.Boot.boot("BackportCandidateListGenerator",args);' "$@"
