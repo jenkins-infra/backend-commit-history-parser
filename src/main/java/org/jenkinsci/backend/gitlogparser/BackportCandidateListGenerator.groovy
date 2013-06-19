@@ -1,5 +1,6 @@
 package org.jenkinsci.backend.gitlogparser
 
+import groovy.text.GStringTemplateEngine
 import hudson.plugins.jira.soap.RemoteIssue
 
 /**
@@ -28,9 +29,11 @@ class BackportCandidateListGenerator extends App {
         def issues = retrieveJiraTicketDetails(cherrypicks)
         issues.sort { RemoteIssue a, RemoteIssue b -> b.votes.compareTo(a.votes)}
 
-        issues.each { RemoteIssue i ->
-            printf "|%13s|%3d|P%s|%-8s|%-10s|%-7s|%s|\n", i.key, i.votes, i.priority, jiraStatus(i.status), jiraResolution(i.resolution), jiraType(i.type), i.summary
-        }
+        def template = new GStringTemplateEngine().createTemplate(getClass().getResource("cherry-pick.html.gsp")).make([issues:issues, cherrypicks:cherrypicks, app:this])
+
+        new File("./cherry-pick.html").withWriter { template.writeTo(it) }
+
+        println "List generated. See ./cherry-pick.html for details"
     }
 
 
