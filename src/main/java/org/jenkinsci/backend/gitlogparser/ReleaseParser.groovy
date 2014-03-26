@@ -11,7 +11,7 @@ import hudson.util.VersionNumber
  *
  * @author Kohsuke Kawaguchi
  */
-class ReleaseParser {
+class ReleaseParser extends App {
     def numDigits(v) {
         return v.toString().split("\\.").length;
     }
@@ -62,7 +62,7 @@ class ReleaseParser {
             releases << new Release(version:new VersionNumber(v), displayName: "$v RC", rc:true, ref: branch, revList: "$branch ^jenkins-$prev")
         }
 
-        App app = new App()
+        App app = new App() {}
         releases.each { Release r -> r.extractTickets(app) }
 
         return releases.sort();
