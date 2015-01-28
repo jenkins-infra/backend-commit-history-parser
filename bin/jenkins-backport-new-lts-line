@@ -1,0 +1,11 @@
+#!/bin/bash
+
+baseline=$1
+
+git checkout -b stable-${baseline} jenkins-${baseline}~1
+
+# Update versions
+sed -i s/${baseline}-SNAPSHOT/${baseline}.1-SNAPSHOT/ pom.xml */pom.xml
+
+git add pom.xml */pom.xml
+git commit -m "Towards ${baseline}.1"
