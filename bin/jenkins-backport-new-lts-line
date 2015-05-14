@@ -2,10 +2,14 @@
 
 baseline=$1
 
-git checkout -b stable-${baseline} jenkins-${baseline}~1
+# Make tagged commit part of the release branch
+git checkout -b stable-${baseline} jenkins-${baseline}
 
 # Update versions
-sed -i s/${baseline}-SNAPSHOT/${baseline}.1-SNAPSHOT/ pom.xml */pom.xml
+sed -i s/${baseline}/${baseline}.1-SNAPSHOT/ pom.xml */pom.xml
+
+# Point scm tags back to HEAD
+sed -i 's/<tag>.*<\/tag>/<tag>HEAD<\/tag>/' pom.xml */pom.xml
 
 git add pom.xml */pom.xml
 git commit -m "Towards ${baseline}.1"
