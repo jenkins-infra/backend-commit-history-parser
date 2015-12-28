@@ -38,9 +38,11 @@ abstract class OSSTicket extends Ticket {
 
     def fill(TicketDetailLoader ticketDetailLoader) {
         def i = ticketDetailLoader.retrieve(this)
-        summary = i.summary
-        priority = i.priority
-        type = App.jiraType(i.type)
+        summary = i?.summary
+        priority = i?.priority
+        if (i != null) {
+            type = App.jiraType(i.type)
+        }
     }
 
     String toString() {
