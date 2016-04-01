@@ -13,3 +13,5 @@ sed -i 's/<tag>.*<\/tag>/<tag>HEAD<\/tag>/' pom.xml */pom.xml
 
 git add pom.xml */pom.xml
 git commit -m "Towards ${baseline}.1"
+
+echo "Remember to advance branch name on https://jenkins.ci.cloudbees.com/job/core/job/jenkins_lts_branch/configure"

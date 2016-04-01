@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# List commits that belong to particular issue, not yet reported to current branch.
+# In the output, each commit has a number of weekly releases it has been released in
+
+master=$(git log --oneline master | grep "$1")
+current=$(git log --oneline | grep "$1")
+
+matches=()
+while read m; do
+    while read c; do
+        if [ -z "$c" -a -z "$m" ]; then
+            # Ignore the empty line inserted in case both logs are empty
+            continue;
+        fi
+        if [ "$c" == "$m" ]; then
+            # Present in both, move to next commit
+            matches+=(${c%% *})
+            continue 2;
+        fi
+    done <<< "$current"
+
+    # Not found in current branch
+    present_in_releases=$(git tag --contains $(cut -f1 -d' ' <<< "$m") | grep -cP '^jenkins-\d.\d+$')
+    echo "($present_in_releases) $m" | grep --color=auto "$1" # Grep again to color the output
+done <<< "$master"
+
+num_matches=${#matches[@]}
+echo "Identical commits: $num_matches"
+if [ $num_matches -gt 0 ]; then
+    echo "${matches[@]}"
+fi
