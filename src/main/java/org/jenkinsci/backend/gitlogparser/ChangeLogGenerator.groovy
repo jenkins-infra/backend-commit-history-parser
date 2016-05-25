@@ -9,6 +9,10 @@ import hudson.plugins.jira.soap.RemoteIssue
  */
 class ChangeLogGenerator extends App {
     def main(String[] args) {
+        if (args.length != 2) {
+            System.err.println("Usage: jenkins-release-generate-changelog <gitRevList> <outputFile>")
+            System.exit(1);
+        }
         generateChangeLog(args[0],new File(args[1]));
     }
 
