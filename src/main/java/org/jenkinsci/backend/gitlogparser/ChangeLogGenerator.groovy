@@ -9,11 +9,12 @@ import hudson.plugins.jira.soap.RemoteIssue
  */
 class ChangeLogGenerator extends App {
     def main(String[] args) {
-        if (args.length != 2) {
-            System.err.println("Usage: jenkins-release-generate-changelog <gitRevList> <outputFile>")
+        if (args.length != 2 && args.length != 1) {
+            System.err.println("Usage: jenkins-release-generate-changelog <gitRevList> [<outputFile>]")
             System.exit(1);
         }
-        generateChangeLog(args[0],new File(args[1]));
+        def w = args.length == 2 ? new File(args[1]) : System.out;
+        generateChangeLog(args[0], w);
     }
 
     /**
@@ -24,10 +25,9 @@ class ChangeLogGenerator extends App {
      * @param file
      *      The file to be created.
      */
-    def generateChangeLog(gitRevList, Writer w) {
+    def generateChangeLog(gitRevList, w) {
         def tickets = extractTickets(this.&parseGitLog.curry(gitRevList));
         def issues = retrieveJiraTicketDetails(tickets)
-
         issues.each { RemoteIssue i ->
             if (!i.key.startsWith("JENKINS-")
              && !i.key.startsWith("SECURITY-"))  return;   // ignore non-Jenkins tickets

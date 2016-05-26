@@ -99,8 +99,8 @@ abstract class App {
             }
 
             // look for fixed tickets
-            (log =~ /\[FIXED ([^\]]+)\]/).each { m ->
-                fixed.addAll(findTickets(m[1]));
+            log.findAll(/\[([^\]]+)\]/).each { m ->
+                fixed.addAll(findTickets(m));
             }
         }
 
@@ -139,8 +139,7 @@ abstract class App {
                 pass();
                 commitId = line.substring(6).trim();
                 buf.setLength(0);
-            } else
-            if (line.startsWith("    ")) {
+            } else if (line.startsWith("    ")) {
                 buf.append(line.substring(4));
             }
         }
