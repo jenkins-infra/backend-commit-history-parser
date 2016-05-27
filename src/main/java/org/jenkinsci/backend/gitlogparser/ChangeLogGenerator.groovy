@@ -37,8 +37,12 @@ class ChangeLogGenerator extends App {
             def clazz = jiraType(i.type)=="bug" ? "bug" : "rfe";
 
             if (i.priority=="P1")   clazz = "major "+clazz;
+            def summary = i.summary
+            if (!summary.endsWith('.')) {
+                summary += '.'
+            }
             w << "  <li class='${clazz}'>\n"
-            w << "    ${i.summary}\n"
+            w << "    ${summary}\n"
             if (i.key.startsWith("JENKINS-"))
                 w << "    (<a href='https://issues.jenkins-ci.org/browse/${i.key}'>issue ${n}</a>)\n"
             else
