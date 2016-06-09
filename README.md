@@ -1,2 +1,3 @@
-This backend process is run at https://ci.jenkins-ci.org/view/Infrastructure/job/infra_commit_history_generation/
-to generate the detailed release changelog.
+# Toolkit for LTS backporting.
+
+How to use this: https://wiki.jenkins-ci.org/display/JENKINS/Backporting+toolkit+for+LTS
