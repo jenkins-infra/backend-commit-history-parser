@@ -1,12 +1,17 @@
 #!/bin/bash
 
+if [ $# -ne 1 ]; then
+  echo "Usage: $1 <baseline_version>" >&2
+  exit 1
+fi
+
 baseline=$1
 
 # Make tagged commit part of the release branch
 git checkout -b stable-${baseline} jenkins-${baseline}
 
 # Update versions
-sed -i s/${baseline}/${baseline}.1-SNAPSHOT/ pom.xml */pom.xml
+mvn versions:set -DnewVersion=${baseline}.1-SNAPSHOT
 
 # Point scm tags back to HEAD
 sed -i 's/<tag>.*<\/tag>/<tag>HEAD<\/tag>/' pom.xml */pom.xml
@@ -16,6 +21,7 @@ git commit -m "Towards ${baseline}.1"
 
 cat <<EOF
 Remember to:
-	Advance branch name on https://jenkins.ci.cloudbees.com/job/core/job/jenkins_lts_branch/configure
-	Copy test plan on https://wiki.jenkins-ci.org/display/JENKINS/LTS+RC+Testing
+    Push the branch
+    Advance branch name on https://jenkins.ci.cloudbees.com/job/core/job/jenkins_lts_branch/configure
+    Copy test plan on https://wiki.jenkins-ci.org/display/JENKINS/LTS+RC+Testing
 EOF
