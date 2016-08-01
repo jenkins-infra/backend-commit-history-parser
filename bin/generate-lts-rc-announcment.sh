@@ -5,6 +5,19 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
+bits="http://mirrors.jenkins-ci.org/war-stable-rc/$1/jenkins.war"
+test_plan="https://wiki.jenkins-ci.org/display/JENKINS/LTS+${1%?}x+RC+Testing"
+
+if [ $(curl -LkSs -w "%{http_code}" -I  -o /dev/null "$bits") != "200" ]; then
+  echo "$bits does not exist" >&2
+  exit 1
+fi
+
+if [ $(curl -LkSs -w "%{http_code}" -I  -o /dev/null "$test_plan") != "200" ]; then
+  echo "$test_plan does not exist" >&2
+  exit 1
+fi
+
 body="Hello everyone,
 
 Latest LTS RC was made public and it is ready to be tested. Release is
@@ -12,8 +25,8 @@ scheduled for $(/usr/bin/date -d 'next Wednesday + 1 week' '+%Y-%m-%d'). <<< !!!
 
 Report your findings in this thread or on the test plan wiki page.
 
-Download bits from http://mirrors.jenkins-ci.org/war-stable-rc/$1/jenkins.war
-Check community maintained LTS test plan https://wiki.jenkins-ci.org/display/JENKINS/LTS+${1%?}x+RC+Testing
+Download bits from $bits
+Check community maintained LTS test plan $test_plan
 
 Thanks
 "
