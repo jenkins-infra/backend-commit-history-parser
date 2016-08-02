@@ -1,0 +1,83 @@
+#!/usr/bin/env groovy
+
+// Generate HTML change log from JIRA issues tagged as x.y.z-fixed
+
+if (args.size() != 2) {
+  System.err.println("Usage generate-lts-changelog <rev-list> <version>")
+  System.exit 1
+}
+
+String revList = args[0]
+String version = args[1]
+
+def backported = getBackported(revList)
+def tagged = printTagged(version)
+backported.sort()
+tagged.sort()
+
+if (tagged == backported) return 0;
+
+println "\n!!!!!!!!\n"
+
+def tmp = backported.collect()
+tmp.removeAll(tagged)
+if (!tmp.empty) {
+  System.err.println("There are issues backported but not tagged in JIRA:")
+  tmp.each {
+    System.err.println("\t" + getIssueUrl(it))
+  }
+}
+
+tmp = tagged.collect()
+tmp.removeAll(backported)
+if (!tmp.empty) {
+  System.err.println("There are issues tagged in JIRA that are not referenced from commits:")
+  tmp.each {
+    System.err.println("\t" + getIssueUrl(it))
+  }
+}
+
+return 2
+
+// Print taged issues and return its list
+List<String> printTagged(String version) {
+  def tagged = []
+
+  String dump = new URL(
+    "https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29&tempMax=1000"
+  ).text
+
+  rss = new XmlSlurper().parseText(dump)
+
+  println "<h3><a name=v${version}>What's new in ${version}</a> (RELEASE/DATE/HERE)</h3>"
+  println "<ul class=image>\n"
+  rss.channel.item.each {
+    def classes = [
+      it.type == "Bug" ? "bug" : "rfe"
+    ];
+    if (it.priority in ['Critical', 'Blocker']) {
+      classes << "major";
+    }
+
+    println "  <li class='${classes.join(' ')}'>"
+    println "    ${it.summary.toString().trim()}."
+    println "    (<a href='${it.link}'>${it.key}</a>)"
+    tagged << it.key.text()
+  }
+  println "</ul>"
+  return tagged
+}
+
+// Collect backported issues from commit
+List<String> getBackported(String revList) {
+  def committed = []
+  ("git log ${revList}".execute().text =~ /JENKINS-\d+/).each {
+    committed << it
+  }
+  committed.unique()
+  return committed
+}
+
+String getIssueUrl(String id) {
+  return "https://issues.jenkins-ci.org/browse/$id"
+}
