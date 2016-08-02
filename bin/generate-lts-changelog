@@ -60,7 +60,7 @@ List<String> printTagged(String version) {
     }
 
     println "  <li class='${classes.join(' ')}'>"
-    println "    ${it.summary.toString().trim()}."
+    println "    ${groovy.xml.XmlUtil.escapeXml(it.summary.toString().trim())}."
     println "    (<a href='${it.link}'>${it.key}</a>)"
     tagged << it.key.text()
   }
