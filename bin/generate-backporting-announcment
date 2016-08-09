@@ -9,7 +9,7 @@ body="Backporting has started and the RC is scheduled for $(/usr/bin/date -d 'ne
 
 Candidates: https://issues.jenkins-ci.org/issues/?filter=12146
 Fixed: https://issues.jenkins-ci.org/issues/?jql=labels%20%3D%20$1-fixed
-Fixed: https://issues.jenkins-ci.org/issues/?jql=labels%20%3D%20$1-rejected
+Rejected: https://issues.jenkins-ci.org/issues/?jql=labels%20%3D%20$1-rejected
 
 Thanks
 "
