@@ -18,12 +18,12 @@ Process through [LTS Candidates](https://issues.jenkins-ci.org/issues/?filter=12
 
 #### Identify issue commits
 
-`list-issue-commits JENKINS-18435` can be used to identify what (properly labeled) commits are
+`list-issue-commits <jira_id>` can be used to identify what (properly labeled) commits are
 
-- common for master branch and current branch (no need to backport)
-- on master branch only (needs to be backported)
+- Common for master branch and current branch (no need to backport)
+- On master branch only (needs to be backported). The script reports the number of weekly releases the commit is part of in parentheses.
 
-Note, this is never 100% bullet proof as there are commit that are part of the fix yet are not labeled as such. Reviewing the JIRA and/or the Pull Request is often needed anyway. Longer branches are better cherry picked as merge commits.
+Note it is never 100% bullet proof as there are commit that are part of the fix yet are not labeled as such. Reviewing the JIRA and/or the Pull Request is often needed anyway. Longer branches are better cherry picked by merge commits.
 
 The commits are backported using `git cherry-pick -x <sha>` so the original commit is referenced.
 
