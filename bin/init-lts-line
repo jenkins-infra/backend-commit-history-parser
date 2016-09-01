@@ -11,7 +11,7 @@ baseline=$1
 git checkout -b stable-${baseline} jenkins-${baseline}
 
 # Update versions
-mvn versions:set -DnewVersion=${baseline}.1-SNAPSHOT
+mvn versions:set -DnewVersion=${baseline}.1-SNAPSHOT | grep -v '\[INFO\]'
 
 # Point scm tags back to HEAD
 sed -i 's/<tag>.*<\/tag>/<tag>HEAD<\/tag>/' pom.xml */pom.xml
@@ -20,6 +20,7 @@ git add pom.xml */pom.xml
 git commit -m "Towards ${baseline}.1"
 
 cat <<EOF
+
 Remember to:
     Push the branch
     Advance branch name on https://jenkins.ci.cloudbees.com/job/core/job/jenkins_lts_branch/configure
