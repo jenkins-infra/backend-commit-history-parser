@@ -11,7 +11,6 @@ Candidates: https://issues.jenkins-ci.org/issues/?filter=12146
 Fixed: https://issues.jenkins-ci.org/issues/?jql=labels%20%3D%20$1-fixed
 Rejected: https://issues.jenkins-ci.org/issues/?jql=labels%20%3D%20$1-rejected
 
-Thanks
 "
 
 xdg-email --utf8 --subject "Backporting for LTS $1 started" --body "${body}" "jenkinsci-dev@googlegroups.com"
