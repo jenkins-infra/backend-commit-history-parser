@@ -1,0 +1,38 @@
+#!/usr/bin/env groovy
+
+class Script {
+
+    private static final String PREFIX = "https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?tempMax=1000&jqlQuery=";
+
+    static int main(String[] args) {
+
+      if (args.size() != 1) {
+          System.err.println("Usage lts-candidate-stats <version>")
+          System.exit 1
+      }
+
+      def version = args[0];
+
+      def maps = [
+          "Candidates": "issuetype+%3D+Bug+AND+resolution+%3D+Fixed+AND+labels+%3D+lts-candidate+AND+status+in+%28Resolved%2C+Closed%29+ORDER+BY+resolved+ASC",
+          "Fixed": "project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29",
+          "Rejected": "project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29"
+      ];
+
+      maps.each { title, jql ->
+          def issues = new XmlSlurper().parseText(new URL(PREFIX + jql).text)
+          printListing title, issues.channel.item
+      }
+
+      return 0
+    }
+
+    static void printListing(String title, items) {
+        println "${title}:"
+        if (!items.isEmpty()) {
+            for (it in items) {
+                println "\t${it.title}"
+            }
+        }
+    }
+}
