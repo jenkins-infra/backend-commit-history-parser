@@ -14,7 +14,7 @@ There is a couple of manual tasks that needs to follow described in the output.
 
 ### Backporting
 
-Process through [LTS Candidates](https://issues.jenkins-ci.org/issues/?filter=12146).
+Process through [LTS Candidates](https://issues.jenkins-ci.org/issues/?filter=12146) and update labe `lts-candidate` to `${VERSION}-fixed` or `${VERSION}-rejected`. See `lts-candidate-stats ${VERSION}` for status report.
 
 #### Identify issue commits
 
