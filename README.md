@@ -14,7 +14,7 @@ There is a couple of manual tasks that needs to follow described in the output.
 
 ### Backporting
 
-Process through [LTS Candidates](https://issues.jenkins-ci.org/issues/?filter=12146) and update labe `lts-candidate` to `${VERSION}-fixed` or `${VERSION}-rejected`. See `lts-candidate-stats ${VERSION}` for status report.
+Process through [LTS Candidates](https://issues.jenkins-ci.org/issues/?filter=12146) and update label `lts-candidate` to `${VERSION}-fixed` or `${VERSION}-rejected`. See `lts-candidate-stats <next_lts_version>` for status report.
 
 #### Identify issue commits
 
@@ -23,7 +23,7 @@ Process through [LTS Candidates](https://issues.jenkins-ci.org/issues/?filter=12
 - Common for master branch and current branch (no need to backport)
 - On master branch only (needs to be backported). The script reports the number of weekly releases the commit is part of in parentheses.
 
-Note it is never 100% bullet proof as there are commit that are part of the fix yet are not labeled as such. Reviewing the JIRA and/or the Pull Request is often needed anyway. Longer branches are better cherry picked by merge commits.
+Note it is never 100% bullet proof as there might be commits that are part of the fix yet are not labeled as such. Reviewing the JIRA and/or the Pull Request is often needed anyway. Longer branches are better cherry picked by merge commits.
 
 The commits are backported using `git cherry-pick -x <sha>` so the original commit is referenced.
 
@@ -45,4 +45,4 @@ TBD. This is something that requires special infra permissions at the moment and
 
 ### Update changelog on jenkins.io
 
-Run `generate-lts-changelog <rev-list> <version>` to create the log. Both information are needed to crosscheck if issues labeled fixed in JIRA are part of git log and vice versa. The script uses weekly changelog messages to assemble LTS changelog as they seem to be more relevant than JIRA description or commit messages. Review or adjustments is often required before submitting a Pull Request against https://github.com/jenkins-infra/jenkins.io/blob/master/content/changelog-stable/index.html.
+Run `generate-lts-changelog <rev-list> <version>` to create the log. Both revision list and version are needed to crosscheck if issues labeled fixed in JIRA are part of git log and vice versa. The script uses weekly changelog messages to assemble LTS changelog as they are more relevant than JIRA description or commit messages. Review or adjustments is often required before submitting a Pull Request against https://github.com/jenkins-infra/jenkins.io/blob/master/content/changelog-stable/index.html.
