@@ -84,7 +84,12 @@ class Script {
   // Collect backported issues from commit
   static List<String> getBackported(String revList) {
     def committed = []
-    ("git log ${revList}".execute().text =~ /JENKINS-\d+/).each {
+    def logProcess = "git log ${revList}".execute()
+    if (logProcess.waitFor() != 0) {
+      println logProcess.err.text
+      System.exit(1)
+    }
+    (logProcess.text =~ /JENKINS-\d+/).each {
       committed << it
     }
     committed.unique()
