@@ -31,7 +31,9 @@ class Script {
         println "${title}:"
         if (!items.isEmpty()) {
             for (it in items) {
-                println "\t${it.title}"
+                println "\t${it.key}"
+                println "\t\t${it.summary}"
+                println "\t\t${it.link}"
             }
         }
     }
