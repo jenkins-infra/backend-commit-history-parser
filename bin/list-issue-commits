@@ -6,7 +6,10 @@
 master=$(git log --oneline master | grep "$1")
 current=$(git log --oneline | grep "$1")
 
-matches=()
+today=$(date --iso-8601)
+
+identical=()
+patch_commits=()
 while read m; do
     while read c; do
         if [ -z "$c" -a -z "$m" ]; then
@@ -15,18 +18,26 @@ while read m; do
         fi
         if [ "$c" == "$m" ]; then
             # Present in both, move to next commit
-            matches+=(${c%% *})
+            identical+=(${c%% *})
             continue 2;
         fi
     done <<< "$current"
 
     # Not found in current branch
-    present_in_releases=$(git tag --contains $(cut -f1 -d' ' <<< "$m") | grep -cP '^jenkins-\d.\d+$')
-    echo "($present_in_releases) $m" | grep --color=auto "$1" # Grep again to color the output
+    sha=$(cut -f1 -d' ' <<< "$m")
+    patch_commits+=($sha)
+    # Remove trailing ~\d: http://git.vger.kernel.narkive.com/O33undVc/git-describe-contains-abbrev-0-sha1-doesn-t-work-as-expected
+    first_release=$(git describe --contains --abbrev=0 "$sha" | sed 's/~.*//')
+    release_date=$(git log -1 --format=%ci "$first_release" | sed 's/ .*//')
+    age="$(( ($(/usr/bin/date -d "$today" +%s) - $(/usr/bin/date -d "$release_date" +%s)) / 86400))"
+    #present_in_releases=$(git tag --contains "$sha" | grep -P '^jenkins-\d.\d+$')
+    echo "$first_release ($age days) $m" | grep --color=auto "$1" # Grep again to color the output
 done <<< "$master"
 
-num_matches=${#matches[@]}
+echo "all: ${patch_commits[@]}"
+
+num_matches=${#identical[@]}
 echo "Identical commits: $num_matches"
 if [ $num_matches -gt 0 ]; then
-    echo "${matches[@]}"
+    echo "${identical[@]}"
 fi
