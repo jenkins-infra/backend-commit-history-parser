@@ -30,7 +30,6 @@ while read m; do
     first_release=$(git describe --contains --abbrev=0 "$sha" | sed 's/~.*//')
     release_date=$(git log -1 --format=%ci "$first_release" | sed 's/ .*//')
     age="$(( ($(/usr/bin/date -d "$today" +%s) - $(/usr/bin/date -d "$release_date" +%s)) / 86400))"
-    #present_in_releases=$(git tag --contains "$sha" | grep -P '^jenkins-\d.\d+$')
     echo "$first_release ($age days) $m" | grep --color=auto "$1" # Grep again to color the output
 done <<< "$master"
 
