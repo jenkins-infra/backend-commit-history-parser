@@ -6,30 +6,38 @@ class Script {
 
     static int main(String[] args) {
 
-      if (args.size() != 1) {
-          System.err.println("Usage lts-candidate-stats <version>")
-          System.exit 1
-      }
+        if (args.size() != 1) {
+            System.err.println("Usage lts-candidate-stats <version>")
+            System.exit 1
+        }
 
-      def version = args[0];
+        def version = args[0];
 
-      def maps = [
-          "Candidates": "issuetype+%3D+Bug+AND+resolution+%3D+Fixed+AND+labels+%3D+lts-candidate+AND+status+in+%28Resolved%2C+Closed%29+ORDER+BY+resolved+ASC",
-          "Fixed": "project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29",
-          "Rejected": "project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29"
-      ];
+        def categories = [:];
+        categories['Postponed'] = [];
+        categories['Rejected'] = fetch("project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29").toList()
+        categories['Fixed'] = fetch("project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29").toList()
+        categories['Candidates'] = fetch("issuetype+%3D+Bug+AND+resolution+%3D+Fixed+AND+labels+%3D+lts-candidate+AND+status+in+%28Resolved%2C+Closed%29+ORDER+BY+resolved+ASC").toList()
 
-      maps.each { title, jql ->
-          def issues = new XmlSlurper().parseText(new URL(PREFIX + jql).text)
-          printListing title, issues.channel.item
-      }
+        categories['Postponed'] = categories['Candidates'].findAll { c ->
+           categories['Rejected'].find { it.key == c.key }
+        }
+        categories['Rejected'].removeAll(categories['Postponed'])
+        categories['Candidates'].removeAll(categories['Postponed'])
 
-      return 0
+        categories.each { title, issues ->
+            printListing(title, issues)
+        }
+        return 0
+    }
+
+    static Iterable fetch(String jql) {
+        return new XmlSlurper().parseText(new URL(PREFIX + jql).text).channel.item
     }
 
     static void printListing(String title, items) {
-        println "${title}:"
         if (!items.isEmpty()) {
+            println "${title}:"
             for (it in items) {
                 println "\t${it.key}"
                 println "\t\t${it.summary}"
