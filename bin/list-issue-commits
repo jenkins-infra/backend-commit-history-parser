@@ -4,6 +4,10 @@
 # In the output, each commit has a number of weekly releases it has been released in
 
 master=$(git log --oneline master | grep "$1")
+if [ "$?" -ne 0 ]; then
+    echo "No matching commits on master branch" >&2
+    exit 1
+fi
 current=$(git log --oneline | grep "$1")
 
 today=$(date --iso-8601)
