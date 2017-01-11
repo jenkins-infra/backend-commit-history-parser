@@ -2,6 +2,7 @@
 
 class Script {
 
+
     private static final String PREFIX = "https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?tempMax=1000&jqlQuery=";
 
     static int main(String[] args) {
@@ -15,9 +16,9 @@ class Script {
 
         def categories = [:];
         categories['Postponed'] = [];
-        categories['Rejected'] = fetch("project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29").toList()
-        categories['Fixed'] = fetch("project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29").toList()
-        categories['Candidates'] = fetch("issuetype+%3D+Bug+AND+resolution+%3D+Fixed+AND+labels+%3D+lts-candidate+AND+status+in+%28Resolved%2C+Closed%29+ORDER+BY+resolved+ASC").toList()
+        categories['Rejected'] = fetch(PREFIX + "project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29").toList()
+        categories['Fixed'] = fetch(PREFIX + "project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29").toList()
+        categories['Candidates'] = fetch("https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/12146/SearchRequest-12146.xml?tempMax=1000").toList()
 
         categories['Postponed'] = categories['Candidates'].findAll { c ->
            categories['Rejected'].find { it.key == c.key }
@@ -32,14 +33,16 @@ class Script {
     }
 
     static Iterable fetch(String jql) {
-        return new XmlSlurper().parseText(new URL(PREFIX + jql).text).channel.item
+        def text = new URL(jql).text
+        return new XmlSlurper().parseText(text).channel.item
     }
 
     static void printListing(String title, items) {
         if (!items.isEmpty()) {
             println "${title}:"
+
             for (it in items) {
-                println "\t${it.key}"
+                println "\t${it.key}\t\t${it.priority}\t\t${it.resolved}"
                 println "\t\t${it.summary}"
                 println "\t\t${it.link}"
             }
