@@ -25,5 +25,8 @@ Remember to:
     Push the branch
     Advance branch name on https://jenkins.ci.cloudbees.com/job/core/job/jenkins_lts_branch/configure
     Copy test plan on https://wiki.jenkins-ci.org/display/JENKINS/LTS+RC+Testing
-    Create PR for new baseline https://github.com/jenkinsci/backend-update-center2/blob/master/site/generate.sh#L7
+    Create PR for new baseline
+        - https://github.com/jenkinsci/backend-update-center2/blob/master/site/generate.sh#L7
+        - https://github.com/jenkins-infra/jenkins.io/blob/master/content/_layouts/developer.html.haml
+        - https://github.com/jenkins-infra/javadoc/blob/master/scripts/generate-javadoc.sh
 EOF
