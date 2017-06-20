@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 
 if [ $# -ne 1 ]; then
   echo "Usage: $1 <baseline_version>" >&2
@@ -11,7 +13,7 @@ baseline=$1
 git checkout -b stable-${baseline} jenkins-${baseline}
 
 # Update versions
-mvn versions:set -DnewVersion=${baseline}.1-SNAPSHOT | grep -v '\[INFO\]'
+mvn -q versions:set -DnewVersion=${baseline}.1-SNAPSHOT
 
 # Point scm tags back to HEAD
 sed -i 's/<tag>.*<\/tag>/<tag>HEAD<\/tag>/' pom.xml */pom.xml
