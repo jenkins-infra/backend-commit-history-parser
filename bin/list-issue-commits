@@ -44,7 +44,7 @@ while read m; do
     else
         info="Unreleased"
     fi
-    echo "$info $m" | grep --color=auto "$1" # Grep again to color the output
+    echo "$info $m" | grep --color=auto "$1\|" # Grep again to color the output but never hide a line
 done <<< "$master"
 
 echo "all: ${patch_commits[@]}"
