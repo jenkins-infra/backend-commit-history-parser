@@ -26,7 +26,7 @@ cat <<EOF
 
 Remember to:
     Push the branch
-    Create branch ${branch_name} for packaging
+    Create branch ${branch_name} for packaging and push it
     Push the backporting announcment
     Populate community calendar
 EOF
