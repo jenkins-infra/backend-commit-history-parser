@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO consider deleting in favor of binaries automatically deployed to https://repo.jenkins-ci.org/incrementals/org/jenkins-ci/main/jenkins-war/
+
 set -ex
 
 : ${PACKAGING_DIR="../packaging"}
