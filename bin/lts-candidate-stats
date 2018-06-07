@@ -14,6 +14,12 @@ class Script {
 
         def version = args[0];
 
+        def targetVersion = ['bash', '-c', "echo 'VERSION=\${project.version}' | mvn help:evaluate | sed -n 's/^VERSION=//p'"].execute().text
+        if (!targetVersion.contains(version)) {
+            System.err.println("The previous version does not appear to be released yet: " + targetVersion)
+            System.exit 1
+        }
+
         def categories = [:];
         categories['Postponed'] = [];
         categories['Rejected'] = fetch(PREFIX + "project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29").toList()
