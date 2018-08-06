@@ -11,8 +11,8 @@ baseline=$1
 
 # Make tagged commit part of the release branch
 branch_name="stable-${baseline}"
-# Use reincrementalification commit as branch point: second child of release commit (first is `[maven-release-plugin] prepare for next development iteration`)
-git checkout -b $branch_name $(git log --reverse --ancestry-path --pretty=%H jenkins-${baseline}..master | head -2 | tail -1)
+# Use first child of release commit as branch point (`[maven-release-plugin] prepare for next development iteration`)
+git checkout -b $branch_name $(git log --reverse --ancestry-path --pretty=%H jenkins-${baseline}..master | head -1)
 
 # Update versions
 mvn -q versions:set-property -Dproperty=revision -DnewVersion=${baseline}.1
