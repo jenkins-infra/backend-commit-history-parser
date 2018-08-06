@@ -33,7 +33,7 @@ Run `generate-backporting-announcement <next_lts_version>` to open mail client w
 
 ### Perform LTS RC release
 
-TBD. This is something that requires special infra permissions at the moment and is subject to change.
+`publish-lts-rc` command gets the core built, gpg signed and uploaded to the distributon server.
 
 ### Announce RC testing started
 
@@ -42,7 +42,3 @@ Run `generate-rc-announcement <next_lts_version>` to open mail client with messa
 ### Perform LTS release
 
 TBD. This is something that requires special infra permissions at the moment and is subject to change.
-
-### Update changelog on jenkins.io
-
-Run `generate-lts-changelog <rev-list> <version>` to create the log. Both revision list and version are needed to crosscheck if issues labeled fixed in JIRA are part of git log and vice versa. The script uses weekly changelog messages to assemble LTS changelog as they are more relevant than JIRA description or commit messages. Review or adjustments is often required before submitting a Pull Request against https://github.com/jenkins-infra/jenkins.io/blob/master/content/changelog-stable/index.html.
