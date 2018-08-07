@@ -14,7 +14,7 @@ if ! git log '@{u}..' --exit-code; then
 fi
 
 # Deploy
-MAVEN_OPTS="-XX:MaxPermSize=512M" mvn -e -Dbuild.type=rc -Prelease -Plts-release clean deploy -Dconcurrency=2 -DskipTests=true
+MAVEN_OPTS="-XX:MaxPermSize=512M" mvn -e -Prelease -Plts-release clean deploy -Dconcurrency=2 -DskipTests=true
 WAR_FILE="$(pwd)/war/target/jenkins.war"
 
 # Push the bits
