@@ -21,7 +21,7 @@ echo -Plts-release >> .mvn/maven.config
 
 echo "$branch_name" > packaging-ref.txt
 
-git add pom.xml .mvn/maven.config
+git add pom.xml .mvn/maven.config packaging-ref.txt
 git commit -m "Towards ${baseline}.1"
 
 # Create dedicated packaging branch
