@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# TODO consider deleting in favor of binaries automatically deployed to https://repo.jenkins-ci.org/incrementals/org/jenkins-ci/main/jenkins-war/
+# (as well as some other stuff in other repositories, like jenkins-stable-rc.mk)
+
 set -euo pipefail
 trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
 IFS=$'\n\t'

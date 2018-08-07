@@ -11,17 +11,17 @@ baseline=$1
 
 # Make tagged commit part of the release branch
 branch_name="stable-${baseline}"
-git checkout -b $branch_name jenkins-${baseline}
+# Use first child of release commit as branch point (`[maven-release-plugin] prepare for next development iteration`)
+git checkout -b $branch_name $(git log --reverse --ancestry-path --pretty=%H jenkins-${baseline}..master | head -1)
 
 # Update versions
-mvn -q versions:set -DnewVersion=${baseline}.1-SNAPSHOT
+mvn -q versions:set-property -Dproperty=revision -DnewVersion=${baseline}.1
 
-# Point scm tags back to HEAD
-sed -i 's/<tag>.*<\/tag>/<tag>HEAD<\/tag>/' pom.xml */pom.xml
+echo -Plts-release >> .mvn/maven.config
 
 echo "$branch_name" > packaging-ref.txt
 
-git add pom.xml */pom.xml
+git add pom.xml .mvn/maven.config
 git commit -m "Towards ${baseline}.1"
 
 # Create dedicated packaging branch
@@ -37,6 +37,6 @@ cat <<EOF
 
 Remember to:
     Push the branch
-    Push the backporting announcment
+    Push the backporting announcement
     Populate community calendar
 EOF
