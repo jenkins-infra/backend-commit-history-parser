@@ -15,14 +15,14 @@ fi
 
 body="Hello everyone,
 
-Latest LTS RC was made public and it is ready to be tested. Release is
+Latest LTS RC was made public and it is ready to be tested. Final release is
 scheduled for $(/usr/bin/date -d 'next Wednesday + 1 week' '+%Y-%m-%d'). <<< !!! CHECK THE DATE !!!
 
-Report your findings in this thread.
+Please, report your findings in this thread.
 
 Download bits from $bits
 
-Thanks
+Thanks!
 "
 
 xdg-email --utf8 --subject "Jenkins $1 LTS RC testing started" --body "${body}" "jenkinsci-dev@googlegroups.com"
