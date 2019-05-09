@@ -33,10 +33,13 @@ git checkout -b "$branch_name" master
 git push -u origin "$branch_name"
 popd
 
+remote_name="$(git remote -v | awk '$2 == "git@github.com:jenkinsci/jenkins.git" && $3 == "(push)" {print $1}')"
 cat <<EOF
 
 Remember to:
     Push the branch
+        $ git push --set-upstream ${remote_name} ${branch_name}
     Push the backporting announcement
+        $ generate-backporting-announcement ${baseline}.1
     Populate community calendar
 EOF
