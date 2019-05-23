@@ -52,10 +52,21 @@ class Script {
             println "${title}:"
 
             for (it in items) {
-                println "\t${it.key}\t\t${it.priority}\t\t${it.resolved}"
+                def prio = it.priority.toString().padRight(10)
+                println "\t${it.key}\t\t${prio}\t\t${ageIndicator(it)}"
                 println "\t\t${it.summary}"
                 println "\t\t${it.link}"
+                println ""
             }
+        }
+    }
+
+    static String ageIndicator(it) {
+        def releasedAs = it.customfields.customfield.find { it.customfieldname == "Released As" }.customfieldvalues as String
+        if (releasedAs?.trim()) {
+            return releasedAs
+        } else {
+            return it.updated
         }
     }
 }
