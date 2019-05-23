@@ -20,6 +20,10 @@ class Script {
             System.exit 1
         }
 
+        def remoteName = ['git', 'for-each-ref', "--format='%(upstream:remotename)'", 'refs/heads/master'].execute().text
+        ['git', 'fetch', 'jenkinsci', 'master:master'].execute().text
+        println "Latest core version: " + ['git', 'describe', 'master', '--abbrev=0'].execute().text
+
         def categories = [:];
         categories['Postponed'] = [];
         categories['Rejected'] = fetch(PREFIX + "project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29").toList()
