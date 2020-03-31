@@ -86,7 +86,7 @@ class Script {
     static String ageIndicator(it) {
         def releasedAs = it.customfields.customfield.find { it.customfieldname == "Released As" }.customfieldvalues as String
         if (releasedAs?.trim()) {
-            return releasedAs.replaceAll("[Jj]enkins ", "")
+            return releasedAs.replaceAll("[Jj]enkins[ -]", "")
         } else {
             return it.updated
         }
