@@ -54,15 +54,30 @@ class Script {
             for (it in items) {
                 def prio = it.priority.toString()
                 if (prio.toLowerCase() in ['blocker', 'critical']) {
-                    prio = Ansi.color(prio, Ansi.RED)
+                    prio = Ansi.color(prio.padRight(10), Ansi.RED)
+                } else {
+                    prio = prio.padRight(10)
                 }
-
-                prio = prio.padRight(10)
 
                 def age = Ansi.color(ageIndicator(it), Ansi.YELLOW)
                 println "${it.key}\t\t${prio}\t\t${age}"
+                def labels = it.labels.label.collect { it.toString() }
+                if ('non-trivial-lts-backporting' in labels){
+                    println "\t${Ansi.color('non-trivial-lts-backporting', Ansi.RED)}"
+                }
                 println "\t${it.summary}"
                 println "\t${it.link}"
+                it.issuelinks.issuelinktype.each {
+                    if (it.name.toString() == 'Cause') {
+                        it.outwardlinks.issuelink.each {
+                            def caused = Ansi.color(
+                                "Caused https://issues.jenkins-ci.org/browse/${it.toString()}",
+                                Ansi.RED
+                            )
+                            println "\t\t$caused"
+                        }
+                    }
+                }
                 println ""
             }
         }
