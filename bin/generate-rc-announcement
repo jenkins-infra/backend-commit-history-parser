@@ -12,15 +12,21 @@ if [ $(curl -LkSs -w "%{http_code}" -I  -o /dev/null "$bits") != "200" ]; then
   exit 1
 fi
 
+uploaded_sha="$(curl -LkSs "${bits}".sha256 | awk '{ print $1 }')"
+local_sha="$(sha256sum "$HOME/.m2/repository/org/jenkins-ci/main/jenkins-war/$1-SNAPSHOT/jenkins-war-$1-SNAPSHOT.war" | awk '{ print $1 }')"
+
+if [ "$uploaded_sha" != "$local_sha" ]; then
+  echo "checksum mismatch: $uploaded_sha != $local_sha" >&2
+  exit 1
+fi
 
 body="Hello everyone,
 
-Latest LTS RC was made public and it is ready to be tested. Final release is
-scheduled for $(/usr/bin/date -d 'next Wednesday + 1 week' '+%Y-%m-%d'). <<< !!! CHECK THE DATE !!!
+Latest LTS RC was made public and it is ready to be tested. Final release is scheduled for $(/usr/bin/date -d 'next Wednesday + 1 week' '+%Y-%m-%d'). <<< !!! CHECK THE DATE !!!
 
 Please, report your findings in this thread.
 
-Download bits from $bits
+Download bits from $bits (sha256:$local_sha)
 
 Thanks!
 "
