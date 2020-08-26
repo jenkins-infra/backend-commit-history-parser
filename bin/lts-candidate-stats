@@ -26,8 +26,8 @@ class Script {
 
         def categories = [:];
         categories['Postponed'] = [];
-        categories['Rejected'] = fetch(PREFIX + "project+%3D+Jenkins+%26%26+labels+in+%28${version}-rejected%29").toList()
-        categories['Fixed'] = fetch(PREFIX + "project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29").toList()
+        categories['Rejected'] = fetch(PREFIX + "labels+in+%28${version}-rejected%29").toList()
+        categories['Fixed'] = fetch(PREFIX + "labels+in+%28${version}-fixed%29").toList()
         categories['Candidates'] = fetch("https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/12146/SearchRequest-12146.xml?tempMax=1000").toList()
 
         categories['Postponed'] = categories['Candidates'].findAll { c ->
