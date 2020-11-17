@@ -38,7 +38,3 @@ Run `generate-backporting-announcement <next_lts_version>` to open mail client w
 ### Announce RC testing started
 
 Run `generate-rc-announcement <next_lts_version>` to open mail client with message template. Check and amend the content as needed. Note the bits needs to be published first.
-
-### Perform LTS release
-
-TBD. This is something that requires special infra permissions at the moment and is subject to change.
