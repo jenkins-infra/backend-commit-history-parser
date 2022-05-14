@@ -44,7 +44,7 @@ class ChangeLogGenerator extends App {
             w << "  <li class='${clazz}'>\n"
             w << "    ${summary}\n"
             if (i.key.startsWith("JENKINS-"))
-                w << "    (<a href='https://issues.jenkins-ci.org/browse/${i.key}'>issue ${n}</a>)\n"
+                w << "    (<a href='https://issues.jenkins.io/browse/${i.key}'>issue ${n}</a>)\n"
             else
                 w << "    (SECURITY-${n})\n"
         }

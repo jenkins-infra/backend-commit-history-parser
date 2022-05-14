@@ -32,7 +32,7 @@
         <td>${app.jiraStatus(i.status)}</td>
         <td>${app.jiraResolution(i.resolution)}</td>
         <td>${app.jiraType(i.type)}</td>
-        <td><a href="https://issues.jenkins-ci.org/browse/${i.key}">${i.summary}</a></td>
+        <td><a href="https://issues.jenkins.io/browse/${i.key}">${i.summary}</a></td>
       </tr>
     <% } %>
   </tbody>

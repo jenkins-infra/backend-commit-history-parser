@@ -15,7 +15,7 @@ class TicketDetailLoader {
     private Map<String,RemoteIssue> cache = [:];
 
     TicketDetailLoader() {
-        jira = JIRA.connect(new URL("https://issues.jenkins-ci.org/"))
+        jira = JIRA.connect(new URL("https://issues.jenkins.io/"))
         def props = new Properties()
         props.load(new FileReader("${System.properties["user.home"]}/.jenkins-ci.org"))
         token = jira.login(props['userName'], props['password'])

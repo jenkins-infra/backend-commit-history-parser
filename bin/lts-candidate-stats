@@ -3,7 +3,7 @@
 class Script {
 
 
-    private static final String PREFIX = "https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?tempMax=1000&jqlQuery=";
+    private static final String PREFIX = "https://issues.jenkins.io/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?tempMax=1000&jqlQuery=";
 
     static int main(String[] args) {
 
@@ -28,7 +28,7 @@ class Script {
         categories['Postponed'] = [];
         categories['Rejected'] = fetch(PREFIX + "labels+in+%28${version}-rejected%29").toList()
         categories['Fixed'] = fetch(PREFIX + "labels+in+%28${version}-fixed%29").toList()
-        categories['Candidates'] = fetch("https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/12146/SearchRequest-12146.xml?tempMax=1000").toList()
+        categories['Candidates'] = fetch("https://issues.jenkins.io/sr/jira.issueviews:searchrequest-xml/12146/SearchRequest-12146.xml?tempMax=1000").toList()
 
         categories['Postponed'] = categories['Candidates'].findAll { c ->
            categories['Rejected'].find { it.key == c.key }
@@ -74,7 +74,7 @@ class Script {
                     if (it.name.toString() == 'Cause') {
                         it.outwardlinks.issuelink.each {
                             def caused = Ansi.color(
-                                "Caused https://issues.jenkins-ci.org/browse/${it.toString()}",
+                                "Caused https://issues.jenkins.io/browse/${it.toString()}",
                                 Ansi.RED
                             )
                             println "\t\t$caused"
