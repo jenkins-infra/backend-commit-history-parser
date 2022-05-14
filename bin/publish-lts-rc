@@ -21,7 +21,7 @@ WAR_FILE="$(pwd)/war/target/jenkins.war"
 packaging_ref="$(cat packaging-ref.txt)"
 packaging="$(mktemp -d /tmp/jenkins-lts-rc-packaging-XXXXXXXX)"
 trap "rm -rf '$packaging'" EXIT
-git clone -b "$packaging_ref" --single-branch git@github.com:jenkinsci/packaging.git "$packaging"
+git clone -b "$packaging_ref" --single-branch https://github.com/jenkinsci/packaging.git "$packaging"
 pushd "$packaging"
 echo "Bulding with packaging $packaging_ref"
 make WAR="$WAR_FILE" BRAND=./branding/jenkins-stable-rc.mk BUILDENV=./env/release.mk war.publish
