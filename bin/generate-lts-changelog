@@ -52,7 +52,7 @@ class Script {
     def tagged = []
 
     String dump = new URL(
-      "https://issues.jenkins-ci.org/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29&tempMax=1000"
+      "https://issues.jenkins.io/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?jqlQuery=project+%3D+Jenkins+%26%26+labels+in+%28${version}-fixed%29&tempMax=1000"
     ).text
 
     def rss = new XmlSlurper().parseText(dump)
@@ -116,7 +116,7 @@ class Script {
   }
 
   static String getIssueUrl(String id) {
-    return "https://issues.jenkins-ci.org/browse/$id"
+    return "https://issues.jenkins.io/browse/$id"
   }
 
   // Get changelog entries as formulated for weekly releases since the baseline
