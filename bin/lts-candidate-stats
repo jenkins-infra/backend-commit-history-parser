@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
+import groovy.xml.XmlSlurper;
 
 class Script {
-
 
     private static final String PREFIX = "https://issues.jenkins.io/sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?tempMax=1000&jqlQuery=";
 
@@ -39,7 +39,7 @@ class Script {
         categories.each { title, issues ->
             printListing(title, issues)
         }
-        return 0
+        return
     }
 
     static Iterable fetch(String jql) {
