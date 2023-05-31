@@ -31,10 +31,8 @@ The commits are backported using `git cherry-pick -x <sha>` so the original comm
 
 Run `generate-backporting-announcement <next_lts_version>` to open mail client with message template. Check and amend the content as needed. Send.
 
-### Perform LTS RC release
-
-`publish-lts-rc` command gets the core built, gpg signed and uploaded to the distributon server.
-
 ### Announce RC testing started
 
-Run `generate-rc-announcement <next_lts_version>` to open mail client with message template. Check and amend the content as needed. Note the bits needs to be published first.
+Create a new post on the [Jenkins Developer mailing list](https://groups.google.com/g/jenkinsci-dev), like https://groups.google.com/g/jenkinsci-dev/c/sFdQNa0StR4/m/3nnVaHBUEAAJ.
+Ensure to include the link to the incremental and use the correct release date.  
+Dates can be found on the [Jenkins calendar](https://www.jenkins.io/events/).
