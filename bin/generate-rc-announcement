@@ -22,7 +22,7 @@ fi
 
 body="Hello everyone,
 
-Latest LTS RC was made public and it is ready to be tested. Final release is scheduled for $(/usr/bin/date -d 'next Wednesday + 1 week' '+%Y-%m-%d'). <<< !!! CHECK THE DATE !!!
+Latest LTS RC was made public and it is ready to be tested. Final release is scheduled for $(date -v+1w -v+wednesday '+%Y-%m-%d'). <<< !!! CHECK THE DATE !!!
 
 Please, report your findings in this thread.
 
@@ -31,4 +31,4 @@ Download bits from $bits (sha256:$local_sha)
 Thanks!
 "
 
-xdg-email --utf8 --subject "Jenkins $1 LTS RC testing started" --body "${body}" "jenkinsci-dev@googlegroups.com"
+open "mailto:jenkinsci-dev@googlegroups.com?subject=Jenkins%20$1%20LTS%20RC%20testing%20started&body=${body}"
