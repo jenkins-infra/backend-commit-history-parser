@@ -1,4 +1,6 @@
-# Toolkit for LTS backporting.
+# The tools in this repository are outdated or obsolete. The remaining tools have been moved into the [jenkins-infra/release](https://github.com/jenkins-infra/release/tree/master/tools) repository.
+
+## Toolkit for LTS backporting.
 
 A set of tools to automate tedious and/or error prone LTS maintaining activities. Command outputs may contain reminders and warnings so it is worth reading.
 
